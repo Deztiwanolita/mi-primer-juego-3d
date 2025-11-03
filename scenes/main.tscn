@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://c5gwn2p80k5kl"]
+[gd_scene load_steps=12 format=3 uid="uid://c5gwn2p80k5kl"]
 
 [ext_resource type="Script" uid="uid://dhgv2a8i4y48e" path="res://scripts/main.gd" id="1_0wfyh"]
 [ext_resource type="PackedScene" uid="uid://cdj4fggg6pcnn" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://b8tjskexyma88" path="res://scenes/mob.tscn" id="3_sugp2"]
+[ext_resource type="FontFile" uid="uid://cyxhh7ddkn62q" path="res://assets/fonts/Montserrat-Medium.ttf" id="4_tbgi4"]
+[ext_resource type="Script" uid="uid://dkbtk83uqy63f" path="res://scripts/score_label.gd" id="5_tefeu"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sgp6g"]
 size = Vector3(60, 2, 60)
@@ -24,16 +26,18 @@ _data = {
 }
 point_count = 4
 
+[sub_resource type="Theme" id="Theme_o6xl0"]
+default_font = ExtResource("4_tbgi4")
+default_font_size = 22
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_0wfyh")
 mob_scene = ExtResource("3_sugp2")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.080980696, 0.9942692, 0.06979158, -0.00034881383, -0.06999327, 0.9975474, 0.99671566, -0.08080643, -0.0053212885, 0, 10.7705555, 0)
-shadow_enabled = true
-
 [node name="Ground" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+collision_layer = 4
+collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
 shape = SubResource("BoxShape3D_sgp6g")
@@ -41,8 +45,13 @@ shape = SubResource("BoxShape3D_sgp6g")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("BoxMesh_o5qli")
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.080980696, 0.9942692, 0.06979157, -0.00034881383, -0.06999327, 0.9975474, 0.99671566, -0.08080643, -0.0053212885, 0, 10.7705555, 0)
+shadow_enabled = true
+
 [node name="Player" parent="." instance=ExtResource("1_o5qli")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.058648467, 0)
+collision_mask = 6
 
 [node name="CameraPivot" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 10, 10)
@@ -79,5 +88,48 @@ transform = Transform3D(8.030335e-05, 0, -1, 0, 1, 0, 1, 0, 8.030335e-05, -13.00
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
+
+[node name="UserInterface" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_o6xl0")
+
+[node name="ScoreLabel" type="Label" parent="UserInterface"]
+layout_mode = 0
+offset_left = 49.0
+offset_top = 44.0
+offset_right = 155.0
+offset_bottom = 67.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Puntuación: 0"
+script = ExtResource("5_tefeu")
+
+[node name="Retry" type="ColorRect" parent="UserInterface"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="UserInterface/Retry"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -107.5
+offset_top = -14.0
+offset_right = 107.5
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press Enter to retry"
 
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
