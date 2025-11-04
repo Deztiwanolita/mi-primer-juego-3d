@@ -4,30 +4,31 @@ extends Node
 
 func _ready():
 	$UserInterface/Retry.hide()
-	
-func _on_mob_timer_timeout():
-	# Create a new instance of the Mob scene.
-	var mob = mob_scene.instantiate()
 
-	# Choose a random location on the SpawnPath.
-	# We store the reference to the SpawnLocation node.
-	var mob_spawn_location = get_node("SpawnPath/SpawnLocation")
-	# And give it a random offset.
+func _on_MobTimer_timeout():
+	var mob = mob_scene.instantiate()
+	var mob_spawn_location = $SpawnPath/SpawnLocation
 	mob_spawn_location.progress_ratio = randf()
-	
 	var player_position = $Player.position
 	mob.initialize(mob_spawn_location.position, player_position)
-
-	# Spawn the mob by adding it to the Main scene.
 	add_child(mob)
-	mob.squashed.connect($UserInterface/ScoreLabel._on_mob_squashed.bind())
+	mob.squashed.connect($UserInterface/ScoreLabel._on_Mob_squashed)
+
+func _unhandled_input(event):
+	if event.is_action_pressed("ui_accept") and $UserInterface/Retry.visible:
+		get_tree().reload_current_scene()
 
 
 func _on_player_hit() -> void:
 	$MobTimer.stop()
 	$UserInterface/Retry.show()
-	
-func _unhandled_input(event):
-	if event.is_action_pressed("ui_accept") and $UserInterface/Retry.visible:
-		# This restarts the current scene.
-		get_tree().reload_current_scene()
+
+
+func _on_mob_timer_timeout() -> void:
+	var mob = mob_scene.instantiate()
+	var mob_spawn_location = $SpawnPath/SpawnLocation
+	mob_spawn_location.progress_ratio = randf()
+	var player_position = $Player.position
+	mob.initialize(mob_spawn_location.position, player_position)
+	add_child(mob)
+	mob.squashed.connect($UserInterface/ScoreLabel._on_mob_squashed)

@@ -15,7 +15,8 @@ tags = {
 "genre": "",
 "title": "House In a Forest Loop"
 }
+loop = true
 
 [node name="MusicPlayer" type="AudioStreamPlayer"]
 stream = SubResource("AudioStreamOggVorbis_fwkb2")
-parameters/looping = true
+autoplay = true

@@ -132,4 +132,5 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Press Enter to retry"
 
+[connection signal="hit" from="Player" to="." method="_on_player_hit"]
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
