@@ -19,10 +19,13 @@ func _physics_process(delta):
 		direction.z += 1
 	if Input.is_action_pressed("move_forward"):
 		direction.z -= 1
-
+		$AnimationPlayer.speed_scale = 4
+	else:
+		$AnimationPlayer.speed_scale = 1
 	if direction != Vector3.ZERO:
 		direction = direction.normalized()
 		$Pivot.look_at(global_position + direction, Vector3.UP)
+		$Pivot.rotation.x = PI / 6 * velocity.y / jump_impulse
 
 	if is_on_floor() and Input.is_action_just_pressed("jump"):
 		target_velocity.y = jump_impulse

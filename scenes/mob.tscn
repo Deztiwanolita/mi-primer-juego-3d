@@ -1,10 +1,44 @@
-[gd_scene load_steps=4 format=3 uid="uid://b8tjskexyma88"]
+[gd_scene load_steps=6 format=3 uid="uid://b8tjskexyma88"]
 
 [ext_resource type="Script" uid="uid://b5malpl0xuq26" path="res://scripts/mob.gd" id="1_bsing"]
 [ext_resource type="PackedScene" uid="uid://on13l3ij3u2x" path="res://assets/models/mob.glb" id="2_d4cuo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_71rcx"]
 size = Vector3(2.0821228, 0.7321472, 2.1054688)
+
+[sub_resource type="Animation" id="Animation_bsing"]
+resource_name = "float"
+length = 1.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Pivot/Character:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.23333335, 0.6333333, 1.1333333),
+"transitions": PackedFloat32Array(0.419, 2.07, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.65, 0), Vector3(0, 0.35, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Pivot/Character:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0333333, 0.43333328, 1.1333333),
+"transitions": PackedFloat32Array(0.419, 0.44, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.13962634, 0, 0), Vector3(-0.15707964, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d4cuo"]
+_data = {
+&"float": SubResource("Animation_bsing")
+}
 
 [node name="Mob" type="CharacterBody3D" groups=["mob"]]
 collision_layer = 2
@@ -14,6 +48,7 @@ script = ExtResource("1_bsing")
 [node name="Pivot" type="Node3D" parent="."]
 
 [node name="Character" parent="Pivot" instance=ExtResource("2_d4cuo")]
+transform = Transform3D(1, 0, 0, 0, 0.9986295, 0.0523359, 0, -0.0523359, 0.9986295, 0, 0.27222216, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.040298462, 0.3030243, -0.0546875)
@@ -21,5 +56,10 @@ shape = SubResource("BoxShape3D_71rcx")
 
 [node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="."]
 aabb = AABB(-1.2412882, -1, -1.9781936, 2.4825764, 2, 3.9563873)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_d4cuo")
+}
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="_on_visible_on_screen_notifier_3d_screen_exited"]
